@@ -1,14 +1,20 @@
 package main
 
 import (
-	"net/http"
-	"log"
 	"encoding/json"
+	"log"
+	"net/http"
+
+	"payment-system/internal/payment"
 )
 
 func main(){
 	mux := http.NewServeMux()
 	count := 0
+
+	paymentHandler := payment.NewHandler(payment.NewService())
+	mux.HandleFunc("POST /payments", paymentHandler.Create)
+	mux.HandleFunc("GET /payments/{id}", paymentHandler.Get)
 
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request){
 		w.Header().Set("Content-Type", 	"application/json")

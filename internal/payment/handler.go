@@ -2,9 +2,10 @@ package payment
 
 
 import (
-	"net/http"
 	"encoding/json"
 	"errors"
+	"io"
+	"net/http"
 )
 
 type Handler struct {
@@ -19,7 +20,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request){
 	var req CreatePaymentRequest
 
 	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnkownFields()
+	decoder.DisallowUnknownFields()
 
 	if err := decoder.Decode(&req); err != nil{
 		http.Error(w, "invalid JSON request", http.StatusBadRequest)

@@ -7,13 +7,13 @@ import (
 )
 
 type Service struct{
-	mu syntax.RWMutex
-	payment map[string]Payment
+	mu       sync.RWMutex
+	payments map[string]Payment
 }
 
 func NewService() *Service{
 	return &Service{
-		payment: make(map[string] Payment),
+		payments: make(map[string]Payment),
 	}
 }
 
@@ -28,10 +28,10 @@ func (s *Service) Create(req CreatePaymentRequest) (Payment, error){
 	}
 
 	p := Payment{
-		ID:          "pay_" + hex.EncodeToString(idBytes[:]),
-		AmountMinor: req.Amount,
-		Currency:    req.Currency,
-		Status:      StatusCreated,
+		ID:       "pay_" + hex.EncodeToString(idBytes[:]),
+		Amount:   req.Amount,
+		Currency: req.Currency,
+		Status:   StatusCreated,
 	}
 
 	s.mu.Lock()
